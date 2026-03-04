@@ -1,4 +1,4 @@
-package rate_limitter;
+
 
 public class FixedSlidingWindow extends RateLimitter{
     private static FixedSlidingWindow instance = new FixedSlidingWindow();

@@ -1,4 +1,4 @@
-package rate_limitter;
+
 
 public class RateLimitterFactory {
     public static RateLimitter create(UserType type)

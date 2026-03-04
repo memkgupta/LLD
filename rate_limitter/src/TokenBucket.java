@@ -1,4 +1,3 @@
-package rate_limitter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

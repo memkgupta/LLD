@@ -1,4 +1,4 @@
-package rate_limitter;
+
 
 public abstract class RateLimitter {
     protected Config config;
