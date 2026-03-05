@@ -34,6 +34,16 @@ public class FileSystem {
         }
         return file.read(offset,length);
     }
+    public Byte[] readFile(String path , int offset)
+    {
+        String[] splittedPath = getSplittedPath(path);
+        FileSystemNode resolved = resolvePath(splittedPath, root,0,splittedPath.length-1);
+        if(! (resolved instanceof File file))
+        {
+            throw new IllegalArgumentException("Invalid file");
+        }
+        return file.read(offset,(int)file.getSize());
+    }
     public void writeFile(String path,byte[] data)
     {
         String[] splittedPath = getSplittedPath(path);

@@ -21,12 +21,12 @@ public class FileSystemClient {
         fs.appendFile("/home/mayank/docs/file1.txt", "\nWelcome to FileSystem".getBytes());
 
         // Read file
-        Byte[] data = fs.readFile("/home/mayank/docs/file1.txt" , 0 , 1);
+        Byte[] data = fs.readFile("/home/mayank/docs/file1.txt" , 0);
         if (data != null) {
             System.out.println("File Content:");
             StringBuilder sb = new StringBuilder();
             for (Byte datum : data) {
-                sb.append(datum);
+                sb.append((char)datum.byteValue());
             }
             System.out.println(sb.toString());
         }
