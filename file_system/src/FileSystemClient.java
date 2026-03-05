@@ -4,7 +4,7 @@ public class FileSystemClient {
 
     public static void main(String[] args) {
 
-        FileSystem fs = new FileSystem();
+        FileSystem fs = new FileSystem("mayank","sudo");
 
         // Create directories
         fs.mkdir("/home");
@@ -21,10 +21,14 @@ public class FileSystemClient {
         fs.appendFile("/home/mayank/docs/file1.txt", "\nWelcome to FileSystem".getBytes());
 
         // Read file
-        byte[] data = fs.readFile("/home/mayank/docs/file1.txt");
+        Byte[] data = fs.readFile("/home/mayank/docs/file1.txt" , 0 , 1);
         if (data != null) {
             System.out.println("File Content:");
-            System.out.println(new String(data));
+            StringBuilder sb = new StringBuilder();
+            for (Byte datum : data) {
+                sb.append(datum);
+            }
+            System.out.println(sb.toString());
         }
 
         // List directory
@@ -41,10 +45,10 @@ public class FileSystemClient {
         fs.rename("/home/mayank/docs/file1.txt", "notes.txt");
 
         // Move file
-        fs.move("/home/mayank/docs/notes.txt", "/home/mayank/notes.txt");
+        fs.move("/home/mayank/docs/notes.txt", "/home/mayank");
 
         // Change permission
-        fs.chmod("/home/mayank/notes.txt", "755");
+//        fs.chmod("/home/mayank/notes.txt", "755");
 
         // Delete file
         fs.deleteFile("/home/mayank/notes.txt");

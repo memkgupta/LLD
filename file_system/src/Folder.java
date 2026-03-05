@@ -8,12 +8,16 @@ public class Folder extends FileSystemNode{
     {
         super(name , path, user , group);
         this.name = name;
+        this.children = new ArrayList<>();
     }
     public List<FileSystemNode> getChildren() {
         return children;
     }
     public void addChild(FileSystemNode child) {
         this.children.add(child);
+    }
+    public void removeChild(String name) {
+        this.children.removeIf(f -> f.getName().equals(name));
     }
     public void setName(String name) {
         this.name = name;

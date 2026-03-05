@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class File extends FileSystemNode{
 
@@ -9,6 +10,7 @@ public class File extends FileSystemNode{
     private FileMetadata metaData;
     protected File(String name,String path,String user , String group) {
         super(name,path,user , group);
+        this.content=new ArrayList<>();
 
     }
     public void setContent(List<Byte> content) {
@@ -27,13 +29,18 @@ public class File extends FileSystemNode{
     public void setSize(long size) {
         this.size = size;
     }
-    public Byte read(int offset)
+    public Byte[] read(int offset , int length)
     {
-        return content.get(offset);
+         Byte[] bytes = new Byte[length];
+         for(int i = 0; i < length && i+offset < content.size(); i++)
+         {
+             bytes[i] = content.get(offset+i);
+         }
+         return bytes;
     }
-    public void addContent(Byte content)
+    public void addContent(Byte data)
     {
-        this.content.add(content);
+        this.content.add(data);
         size++;
     }
     public void setContent(byte[] content) {
@@ -42,7 +49,7 @@ public class File extends FileSystemNode{
         for (int i = 0; i < content.length; i++) {
             boxed[i] = content[i];   // auto boxing
         }
-        this.content = Arrays.asList(boxed);
+        this.content = Arrays.stream(boxed).collect(Collectors.toCollection(ArrayList::new));
         this.size = content.length;
     }
 
