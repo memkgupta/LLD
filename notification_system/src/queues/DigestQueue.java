@@ -3,14 +3,15 @@ package queues;
 import dtos.DigestNotificationJob;
 import dtos.NotificationJob;
 import messages.DigestMessage;
+import messages.StringMessage;
 
 import java.util.*;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class DigestQueue<D extends DigestMessage> implements BiNotificationQueue<NotificationJob<String>,DigestNotificationJob> {
-    private final Map<String, List<NotificationJob<String >>> buffer = new HashMap<>();
-    private final Queue<DigestNotificationJob> readyQueue = new LinkedList<>();
+public abstract class DigestQueue<D extends DigestMessage> implements BiNotificationQueue<NotificationJob<StringMessage>,DigestNotificationJob> {
+    private final Map<String, List<NotificationJob<StringMessage >>> buffer = new HashMap<>();
+    private final Queue<DigestNotificationJob<D>> readyQueue = new LinkedList<>();
     private final int capacity;
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition notEmpty = lock.newCondition();
@@ -18,18 +19,18 @@ public abstract class DigestQueue<D extends DigestMessage> implements BiNotifica
     public DigestQueue(int capacity) {
         this.capacity = capacity;
     }
-    private void addToDigest(NotificationJob<String> job) {
+    private void addToDigest(NotificationJob<StringMessage> job) {
         buffer.computeIfAbsent(job.getUserId(), k -> new ArrayList<>()).add(job);
-        List<NotificationJob<String>> jobs = buffer.get(job.getUserId());
+        List<NotificationJob<StringMessage>> jobs = buffer.get(job.getUserId());
         if (jobs.size() >= 3) {
-            DigestNotificationJob digest = mergeJobs(jobs);
+            DigestNotificationJob<D> digest = mergeJobs(jobs);
             readyQueue.offer(digest);
             buffer.remove(job.getUserId());
         }
     }
-    protected abstract DigestNotificationJob mergeJobs(List<NotificationJob<String>> jobs);
+    protected abstract DigestNotificationJob<D> mergeJobs(List<NotificationJob<StringMessage>> jobs);
     @Override
-    public boolean offer(NotificationJob<String> job) {
+    public boolean offer(NotificationJob<StringMessage> job) {
         lock.lock();
         try {
             while (isFull()) {
@@ -51,16 +52,16 @@ public abstract class DigestQueue<D extends DigestMessage> implements BiNotifica
         }
     }
     @Override
-    public NotificationJob<String> poll() {
+    public NotificationJob<StringMessage> poll() {
        throw new IllegalStateException("Not implemented");
     }
     @Override
-    public NotificationJob<String> peek() {
+    public NotificationJob<StringMessage> peek() {
         throw new IllegalStateException("Not implemented");
 
     }
     @Override
-    public DigestNotificationJob pollDigested() {
+    public DigestNotificationJob<D> pollDigested() {
         lock.lock();
         try {
             while (readyQueue.isEmpty()) {
@@ -79,7 +80,7 @@ public abstract class DigestQueue<D extends DigestMessage> implements BiNotifica
         }
     }
     @Override
-    public DigestNotificationJob peekDigested() {
+    public DigestNotificationJob<D> peekDigested() {
         lock.lock();
         try {
             return readyQueue.peek();

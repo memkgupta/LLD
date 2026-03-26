@@ -3,14 +3,14 @@ package dtos;
 import enums.ChannelEnum;
 import messages.Message;
 
-public class NotificationJob<T> {
+public class NotificationJob<T extends Message> {
     /*priority decreases from 0->3*/
     private final int priority;
     private int retryCount;
     private final ChannelEnum channel;
-    private final Message<T> message;
+    private final T message;
     private final String userId;
-    public NotificationJob(Message<T> message, ChannelEnum channel, int priority, String userId) {
+    public NotificationJob(T message, ChannelEnum channel, int priority, String userId) {
         this.message = message;
         this.channel = channel;
         this.priority = priority;
@@ -31,7 +31,7 @@ public class NotificationJob<T> {
         return channel;
     }
 
-    public Message getMessage() {
+    public T getMessage() {
         return message;
     }
 

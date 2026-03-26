@@ -1,29 +1,16 @@
 package messages;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class DigestMessage implements Message<ArrayList<String>> {
-    private final ArrayList<String> message;
+public abstract class DigestMessage extends Message<List<StringMessage>> {
 
-    protected DigestMessage() {
-        message = new ArrayList<>();
+
+    protected DigestMessage(String userId) {
+        super(new ArrayList<>(), userId);
+
     }
-
-    @Override
-    public ArrayList<String> getContent() {
-        return this.message;
-    }
-
-    @Override
-    public String getSender() {
-        return "";
-    }
-
-    @Override
-    public String getReceiver() {
-        return "";
-    }
-    public void addMessage(String message) {
-        this.message.add(message);
+    public void addMessage(StringMessage message) {
+        this.content.add(message);
     }
 }

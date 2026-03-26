@@ -2,13 +2,14 @@ package workers;
 
 import dtos.NotificationJob;
 import dtos.NotificationSuccess;
+import messages.Message;
 import queues.NotificationQueue;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public abstract class PollingWorker<T extends NotificationJob> implements Worker<T> {
+public abstract class PollingWorker<C,D extends Message<C>,T extends NotificationJob<D>> implements Worker<T> {
     protected final NotificationQueue<T> queue;
     protected final Lock lock;
     protected final Condition notEmpty;
@@ -43,5 +44,5 @@ public abstract class PollingWorker<T extends NotificationJob> implements Worker
         }
         return task(job);
     }
-    protected abstract NotificationSuccess task(NotificationJob job);
+    protected abstract NotificationSuccess task(T job);
 }
