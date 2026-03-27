@@ -1,6 +1,6 @@
 package queues;
 
-import channels.Channel;
+import channels.SimpleChannel;
 import dtos.NotificationJob;
 import exceptions.FailedDeliveryException;
 import exceptions.QueueFullException;
@@ -8,14 +8,11 @@ import factories.ChannelFactory;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public abstract class FinalDeliveryQueue<T extends NotificationJob> implements NotificationQueue<T> {
+public abstract class FinalDeliveryQueueSimple<T extends NotificationJob> implements SimpleNotificationQueue<T> {
     /*Will have an internal PriorityQueue
     *
     * */
@@ -25,7 +22,7 @@ public abstract class FinalDeliveryQueue<T extends NotificationJob> implements N
     protected static int MAX_SIZE = 100;
     protected static int MAX_WORKERS_COUNT = 5;
     protected final Lock lock;
-    protected FinalDeliveryQueue(ChannelFactory channelFactory) {
+    protected FinalDeliveryQueueSimple(ChannelFactory channelFactory) {
         this.channelFactory = channelFactory;
         this.size = 0;
         this.lock = new ReentrantLock();
@@ -58,8 +55,8 @@ public abstract class FinalDeliveryQueue<T extends NotificationJob> implements N
 
     @Override
     public boolean offer(T job) {
-        Channel<?> channel = channelFactory.getChannel(job.getChannel());
-        if(job.getRetryCount()>=channel.maxRetryCount())
+        SimpleChannel<?> simpleChannel = (SimpleChannel<?>) channelFactory.getChannel(job.getChannel());
+        if(job.getRetryCount()>= simpleChannel.maxRetryCount())
         {
         throw new FailedDeliveryException(job);
         }
