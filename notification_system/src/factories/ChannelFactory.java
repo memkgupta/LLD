@@ -1,18 +1,19 @@
 package factories;
 
 import channels.Channel;
+import channels.SimpleChannel;
 import dtos.NotificationJob;
 import enums.ChannelEnum;
 
 import java.util.List;
 
 public class ChannelFactory {
-    private List<Channel<?>> channels;
-    public ChannelFactory(List<Channel<?>> channels) {
+    private List<Channel> channels;
+    public ChannelFactory(List<Channel> channels) {
         this.channels = channels;
     }
-    public <T extends NotificationJob> Channel<T> getChannel(ChannelEnum channel)
+    public Channel getChannel(ChannelEnum channel)
     {
-        return (Channel<T>) channels.stream().filter(c->c.supports().equals(channel)).findFirst().orElseThrow();
+        return  channels.stream().filter(c->c.supports().equals(channel)).findFirst().orElseThrow();
     }
 }

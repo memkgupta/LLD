@@ -1,17 +1,17 @@
 package workers;
 
-import dtos.NotificationJob;
 import dtos.NotificationSuccess;
 import dtos.SMSNotificationJob;
 import messages.StringMessage;
-import queues.NotificationQueue;
-
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
+import queues.SimpleNotificationQueue;
 
 public class SMSPollingWorker extends PollingWorker<String , StringMessage,SMSNotificationJob> {
-    protected SMSPollingWorker(NotificationQueue<SMSNotificationJob> queue, Lock lock, Condition notEmpty, Condition notFull) {
-        super(queue, lock, notEmpty, notFull);
+    public SMSPollingWorker(SimpleNotificationQueue<SMSNotificationJob> queue) {
+
+        super(queue);
+//        Lock lock = new ReentrantLock();
+//        Condition notEmpty = lock.newCondition();
+//        Condition notFull = lock.newCondition();
     }
 
     @Override
